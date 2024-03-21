@@ -2,7 +2,8 @@
 LINE_LENGTH = 160
 PY_DIR = .
 STRICT = --strict
-STRICT =
+# STRICT =
+
 FILES = t1.py procFunc.py makefile
 
 all: reformat test

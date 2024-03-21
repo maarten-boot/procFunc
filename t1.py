@@ -2,11 +2,13 @@
 
 import os
 
+from typing import Any
+
 from procFunc import ProcFunc
 
 
 def print_func(
-    conn,
+    conn: Any,
     max_requests: int,
 ) -> None:
     n = 0
@@ -24,7 +26,7 @@ def print_func(
             break
 
 
-def main():
+def main() -> None:
     names = [
         "Europe",
         "Azia",
@@ -39,7 +41,7 @@ def main():
         "Nirvana",
     ]
 
-    pf = ProcFunc()
+    pf: ProcFunc = ProcFunc()
     # every 5 calls of func we start a new process to avoid memory leaks
     # f = pf.makeHandler(print_func, 5)
     f = pf.makeHandler(print_func)
@@ -55,5 +57,4 @@ def main():
 
 
 if __name__ == "__main__":
-    retcode = main()
-    exit(retcode)
+    main()

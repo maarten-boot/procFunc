@@ -2,6 +2,10 @@
 
 import sys
 import errno
+from typing import (
+    Tuple,
+    Any,
+)
 
 from socket import error as SocketError
 
@@ -11,12 +15,12 @@ MAX_CLIENT_RUNS_BEFORE_EXIT = 2
 
 
 class ProcFunc:
-    def __init__(self, ctx=None):
+    def __init__(self, ctx: Any = None) -> None:
         if ctx is None:
             ctx = mp.get_context("spawn")
         self.ctx = ctx
 
-    def startProc(self, f, max_requests):
+    def startProc(self, f: Any, max_requests: int) -> Tuple[Any, Any]:
         # start the whole parent part
         self.parent_conn, self.child_conn = mp.Pipe()
 
@@ -30,18 +34,18 @@ class ProcFunc:
 
         return self.proc, self.parent_conn
 
-    def oneItem(self, item):
+    def oneItem(self, item: str) -> str:
         self.parent_conn.send(item)
-        return self.parent_conn.recv()
+        return str(self.parent_conn.recv())
 
     def makeHandler(
         self,
-        f,
+        f: Any,
         max_requests: int = MAX_CLIENT_RUNS_BEFORE_EXIT,
-    ):
+    ) -> Any:
         self.startProc(f, max_requests)
 
-        def inner_func(item):
+        def inner_func(item: str) -> str:
             nonlocal self
             try:
                 v = self.oneItem(item)
@@ -52,6 +56,6 @@ class ProcFunc:
                     raise
                 self.startProc(f, max_requests)
                 v = self.oneItem(item)
-                return v
+                return str(v)
 
         return inner_func
