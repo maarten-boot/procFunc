@@ -32,6 +32,7 @@ def main() -> None:
         "Azia",
         "Africa",
         "America",
+        "Australie",
         "Antarctica",
         "Atlantis",
         "Mu",
@@ -43,9 +44,18 @@ def main() -> None:
 
     pf: ProcFunc = ProcFunc()
     # every 5 calls of func we start a new process to avoid memory leaks
-    # f = pf.makeHandler(print_func, 5)
     f = pf.makeHandler(print_func)
 
+    n = 0
+    while True:
+        n += 1
+        for item in names:
+            v = f(item)
+            print(v)
+        if n >= 26:
+            break
+
+    f = pf.makeHandler(print_func, 50)
     n = 0
     while True:
         n += 1

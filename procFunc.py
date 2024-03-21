@@ -11,7 +11,7 @@ from socket import error as SocketError
 
 import multiprocessing as mp
 
-MAX_CLIENT_RUNS_BEFORE_EXIT = 2
+MAX_CLIENT_RUNS_BEFORE_EXIT = 10000
 
 
 class ProcFunc:
@@ -49,13 +49,15 @@ class ProcFunc:
             nonlocal self
             try:
                 v = self.oneItem(item)
-                return v
+                return str(v)
             except SocketError as e:
                 if e.errno != errno.ECONNRESET:
                     print(f"restart process {e}", file=sys.stderr)
                     raise
+
                 self.startProc(f, max_requests)
                 v = self.oneItem(item)
+
                 return str(v)
 
         return inner_func
