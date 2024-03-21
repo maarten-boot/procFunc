@@ -1,4 +1,10 @@
-import os
+# python3
+
+import sys
+import errno
+
+from socket import error as SocketError
+
 import multiprocessing as mp
 
 MAX_CLIENT_RUNS_BEFORE_EXIT = 2
@@ -40,7 +46,10 @@ class ProcFunc:
             try:
                 v = self.oneItem(item)
                 return v
-            except:
+            except SocketError as e:
+                if e.errno != errno.ECONNRESET:
+                    print(f"restart process {e}", file=sys.stderr)
+                    raise
                 self.startProc(f, max_requests)
                 v = self.oneItem(item)
                 return v

@@ -14,12 +14,10 @@ def print_func(
         n += 1
         try:
             request = conn.recv()
-            reply = (
-                f"The name of the given continent is: {request} says {os.getpid()}, {n}"
-            )
+            reply = f"The name of the given continent is: {request}. Says process {os.getpid()} with count {n}"
             conn.send(reply)
-        except:
-            # normally on EOF
+        except EOFError as e:
+            _ = e
             exit(0)
 
         if n >= max_requests:
@@ -42,9 +40,9 @@ def main():
     ]
 
     pf = ProcFunc()
-    f = pf.makeHandler(
-        print_func, 5
-    )  # every 5 calls of func we start a new process to avoid memory leaks
+    # every 5 calls of func we start a new process to avoid memory leaks
+    # f = pf.makeHandler(print_func, 5)
+    f = pf.makeHandler(print_func)
 
     n = 0
     while True:
